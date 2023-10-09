@@ -8,6 +8,21 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+const defaultBoard: Board['structure'] = [
+    {
+        column_id: 1,
+        tickets: [],
+    },
+    {
+        column_id: 2,
+        tickets: [],
+    },
+    {
+        column_id: 3,
+        tickets: [],
+    },
+]
+
 const insertBoard = db.prepare(
     'INSERT INTO `boards` (structure) VALUES ($structure) RETURNING id',
 )
@@ -15,15 +30,12 @@ const insertBoard = db.prepare(
 app.post('/boards', (req, res) => {
     const reqBoard = req.body() as Board
 
-    if (!reqBoard.structure) {
-        res.status(422).send({
-            message: 'Structure is required.',
-        })
-    }
+    const structure = reqBoard.structure || defaultBoard
 
-    db.transaction(() => {
-        insertBoard.get(JSON.stringify(reqBoard.structure))
+    const boardId = insertBoard.get(JSON.stringify(structure)) as number
+
+    res.json({
+        message: 'Board created successfully.',
+        board: db.query('SELECT * FROM boards WHERE id = ?').get(boardId),
     })
-
-    res.json({})
 })

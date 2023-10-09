@@ -12,7 +12,10 @@ declare global {
     }
 
     type Board = Model & {
-        structure: Column[]
+        structure: {
+            column_id: Column['id']
+            tickets: Ticket['id'][]
+        }[]
     }
 
     type Ticket = Model & {

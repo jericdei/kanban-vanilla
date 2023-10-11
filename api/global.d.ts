@@ -1,10 +1,10 @@
-export {}
+export { }
 
 declare global {
     type Model = {
         id?: number
-        created_at: string
-        updated_at: string
+        created_at?: string
+        updated_at?: string
     }
 
     type Column = Model & {
@@ -12,6 +12,7 @@ declare global {
     }
 
     type Board = Model & {
+        title: string
         structure: {
             column_id: Column['id']
             tickets: Ticket['id'][]

@@ -58,11 +58,11 @@ for (const path of migrationFiles) {
         queries = [text]
     }
 
-    queries.forEach((query) => {
+    for (const query of queries) {
         if (query.length > 0) {
             db.run(query)
         }
-    })
+    }
 
     db.prepare('INSERT INTO migrations (file) VALUES (?)').run(path)
 
